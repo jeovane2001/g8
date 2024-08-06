@@ -124,14 +124,18 @@ public class Main extends Application {
                         FaixaValores faixaValores = valoresReferenciaUsuario.get(parametro);
                         if (faixaValores == null) {
                             resultados.append(parametro).append(": Valor de referência não encontrado.\n");
-                        } else if (valor < faixaValores.getMin() || valor > faixaValores.getMax()) {
-                            resultados.append(parametro).append(" fora do valor de referência: ").append(valor).append(" ")
+                        } if (valor < faixaValores.getMin() ) {
+                            resultados.append(parametro).append(" está abaixo do valor de referência: ").append(valor).append(" ")
+                                .append(faixaValores.getUnidade()).append(" (Valor de referência: ")
+                                .append(faixaValores.getMin()).append(" - ").append(faixaValores.getMax()).append(" ")
+                                .append(faixaValores.getUnidade()).append(")\n");
+                        } else if ( valor > faixaValores.getMax()) {
+                            resultados.append(parametro).append(" acima do valor de referência: ").append(valor).append(" ")
                                 .append(faixaValores.getUnidade()).append(" (Valor de referência: ")
                                 .append(faixaValores.getMin()).append(" - ").append(faixaValores.getMax()).append(" ")
                                 .append(faixaValores.getUnidade()).append(")\n");
                         }
                     }
-
                     // Salvando os resultados no paciente
                     paciente.setResultados(resultados.toString());
                     pacienteRepository.update(paciente);
@@ -139,6 +143,7 @@ public class Main extends Application {
                     // Exibindo os resultados armazenados
                     Paciente pacienteFromDb = pacienteRepository.read(paciente.getId());
                     resultArea.setText("Resultados armazenados:\n" + pacienteFromDb.getResultados());
+
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
